@@ -143,6 +143,36 @@ from mind_sonic.utils.file_processor import process_files
 from mind_sonic.utils.file_archiver import archive_files
 ```
 
+### Good Example - KISS and "Light as a Haiku" with Yahoo Finance Tools
+
+Instead of having a single monolithic file with multiple tools:
+
+```text
+src/mind_sonic/tools/
+├── __init__.py             # Empty file to mark as package
+├── yahoo_ticker_info_tool.py    # Specific tool for ticker information
+├── yahoo_history_tool.py        # Specific tool for historical data
+├── yahoo_company_info_tool.py   # Specific tool for company information
+├── yahoo_etf_holdings_tool.py   # Specific tool for ETF holdings
+└── yahoo_news_tool.py           # Specific tool for financial news
+```
+
+```python
+# In research_crew.py - Explicit imports for each tool
+from mind_sonic.tools.yahoo_ticker_info_tool import YahooFinanceTickerInfoTool
+from mind_sonic.tools.yahoo_history_tool import YahooFinanceHistoryTool
+from mind_sonic.tools.yahoo_company_info_tool import YahooFinanceCompanyInfoTool
+from mind_sonic.tools.yahoo_etf_holdings_tool import YahooFinanceETFHoldingsTool
+from mind_sonic.tools.yahoo_news_tool import YahooFinanceNewsTool
+
+# Each tool has a single responsibility and can be used independently
+ticker_info_tool = YahooFinanceTickerInfoTool()
+history_tool = YahooFinanceHistoryTool()
+company_info_tool = YahooFinanceCompanyInfoTool()
+etf_holdings_tool = YahooFinanceETFHoldingsTool()
+news_tool = YahooFinanceNewsTool()
+```
+
 ### Good Example - HTML Report Generation with Emojis
 
 ```html

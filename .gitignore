@@ -8,6 +8,7 @@ lib/
 *.html
 *.pdf
 *.xlsx
+*.pptx
 storage/chroma/
 logs/*
 !logs/.gitkeep
