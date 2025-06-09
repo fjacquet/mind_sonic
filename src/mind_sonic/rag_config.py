@@ -25,6 +25,6 @@ DEFAULT_RAG_CONFIG = {
         "chunk_size": 400,
         "chunk_overlap": 100,
         "length_function": "len",
-        "min_chunk_size": 0,
+        "min_chunk_size": 150,  # Must be greater than chunk_overlap
     },
 }
