@@ -23,10 +23,22 @@ class TextToSpeechInput(BaseModel):
 class OpenAITTSTool(BaseTool):
     """Tool for converting text to speech using OpenAI's API with language-aware voice selection.
     
-    Features:
-    - Automatic voice selection based on language
-    - Text chunking to handle long content
-    - Audio concatenation for seamless playback
+    This tool enhances the basic OpenAI TTS functionality with several key features:
+    - Automatic voice selection based on language input (e.g., English → 'alloy', French → 'nova')
+    - Text chunking to handle content that exceeds OpenAI's token limits
+    - Automatic audio concatenation for seamless playback of multi-chunk content
+    - Proper directory creation and file management
+    
+    The tool is designed to be used by agents in the PodcastCrew system to generate
+    audio content in multiple languages from text scripts without manually specifying voices.
+    
+    Example usage:
+        tts_tool = OpenAITTSTool()
+        result = tts_tool.run(
+            text="Text to convert to speech",
+            output_file="output/audio_file.mp3",
+            language="french"  # Will automatically select appropriate French voice
+        )
     """
     name: str = "openai_text_to_speech"
     description: str = "Convert text to speech using OpenAI's TTS API with language-aware voice selection"
@@ -94,14 +106,24 @@ class OpenAITTSTool(BaseTool):
         return f"Audio saved to {output_file}"
     
     def _chunk_text(self, text: str, max_chars: int = 4000) -> List[str]:
-        """Split text into chunks of max_chars (approximate token limit).
+        """Split text into semantically appropriate chunks that respect OpenAI's token limits.
+        
+        This method implements a hierarchical chunking strategy that attempts to preserve
+        natural language boundaries while staying within the specified character limit:
+        1. First tries to split at paragraph breaks (\n\n)
+        2. If paragraphs exceed the limit, splits at sentence boundaries (. )
+        3. If sentences exceed the limit, includes them as-is
         
         Args:
-            text: Text to split into chunks
-            max_chars: Maximum number of characters per chunk
+            text: The text content to split into appropriate chunks
+            max_chars: Maximum number of characters per chunk (default 4000 approximates OpenAI's limit)
             
         Returns:
-            List of text chunks
+            List of text chunks ready for processing by the TTS API
+        
+        Note:
+            The actual token limit depends on the model used. This character-based approximation
+            is simpler but may not perfectly match OpenAI's token counting for all languages.
         """
         # Simple character-based chunking for now
         # A more sophisticated approach would consider sentence boundaries
@@ -151,15 +173,27 @@ class OpenAITTSTool(BaseTool):
     
     def _process_chunks(self, chunks: List[str], output_file: str, model: str, voice: str, 
                         response_format: str, speed: float) -> None:
-        """Process multiple text chunks and concatenate the audio.
+        """Process multiple text chunks and concatenate them into a single seamless audio file.
+        
+        This method handles the workflow for processing long text content:
+        1. Creates temporary files for each chunk's audio output
+        2. Processes each text chunk individually via OpenAI's TTS API
+        3. Loads and concatenates all audio chunks using pydub
+        4. Exports the final combined audio to the requested output file
+        5. Cleans up all temporary files
         
         Args:
-            chunks: List of text chunks to process
-            output_file: Final output file path
-            model: TTS model to use
-            voice: Voice to use for TTS
-            response_format: Audio format for the output
-            speed: Speed of the speech
+            chunks: List of text chunks to process (from _chunk_text method)
+            output_file: Path where the final concatenated audio will be saved
+            model: TTS model identifier (e.g., 'tts-1')
+            voice: Voice identifier to use (e.g., 'alloy', 'nova')
+            response_format: Audio format extension (e.g., 'mp3')
+            speed: Speech speed multiplier (e.g., 1.0 for normal speed)
+            
+        Notes:
+            - Uses temporary files with unique names to avoid conflicts
+            - Includes proper cleanup in a finally block to ensure temp files are removed
+            - Uses pydub's AudioSegment for audio manipulation
         """
         combined_audio = AudioSegment.empty()
         temp_files = []
@@ -191,15 +225,23 @@ class OpenAITTSTool(BaseTool):
     
     def _process_single(self, text: str, output_file: str, model: str, voice: str, 
                         response_format: str, speed: float) -> None:
-        """Process a single text chunk and save audio.
+        """Process a single text chunk and save it as an audio file.
+        
+        This method handles the direct interaction with OpenAI's TTS API to generate
+        audio from a single chunk of text (either the full text or a portion of it).
+        It's used both directly for short text and as a helper by _process_chunks for longer text.
         
         Args:
-            text: Text to convert to speech
-            output_file: Path to save the output audio file
-            model: TTS model to use
-            voice: Voice to use for TTS
-            response_format: Audio format for the output
-            speed: Speed of the speech
+            text: The text content to convert to speech
+            output_file: Path where the audio file will be saved
+            model: TTS model identifier (e.g., 'tts-1', 'tts-1-hd')
+            voice: Voice identifier to use (e.g., 'alloy', 'nova', 'shimmer')
+            response_format: Audio format to generate (e.g., 'mp3', 'wav')
+            speed: Speech speed multiplier (1.0 is normal, 0.5 is half speed, etc.)
+            
+        Note:
+            Uses the modern OpenAI API pattern with direct binary file writing
+            rather than the deprecated stream_to_file approach.
         """
         response = openai.audio.speech.create(
             model=model,
