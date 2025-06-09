@@ -139,8 +139,19 @@ class SonicFlow(Flow[SonicState]):
         
     @listen(start_research)
     def end_research(self):
+        """Meeting point after research."""
+        logger.info("Research done")
+        
+    @listen(end_research)
+    def start_podcast(self):
+        """Start podcast after research."""
+        logger.info("Starting podcast")
+        PodcastCrew().crew().kickoff()
+    
+    @listen(start_podcast)
+    def end_podcast(self):
         """Generate a poem after research."""
-        logger.info("Research done, let's finish with a poem")
+        logger.info("posdcase done, let's finish with a poem")
         poem = PoemCrew().crew().kickoff()
         self.state.poem = poem
         logger.info(poem)

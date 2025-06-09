@@ -90,7 +90,40 @@ def split_text(text, max_length=MAX_CHUNK_SIZE):
     return chunks
 
 
-def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-1"):
+# Language to voice mapping for better audio quality with appropriate voices
+LANGUAGE_VOICE_MAP = {
+    "english": "alloy",
+    "en": "alloy",
+    "french": "nova",
+    "fr": "nova",
+    "spanish": "shimmer",
+    "es": "shimmer",
+    "german": "onyx",
+    "de": "onyx",
+    "italian": "echo",
+    "it": "echo",
+    "japanese": "nova",
+    "ja": "nova",
+    "portuguese": "alloy",
+    "pt": "alloy"
+}
+
+
+def determine_voice_for_language(language):
+    """
+    Select the appropriate voice based on the language.
+    
+    Args:
+        language: Language code or name (e.g., 'en', 'english', 'fr', 'french')
+        
+    Returns:
+        Voice name to use with OpenAI TTS API
+    """
+    language = language.lower()
+    return LANGUAGE_VOICE_MAP.get(language, "alloy")  # Default to alloy if language not found
+
+
+def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-1", language=None):
     """
     Convert a podcast script to audio using OpenAI's TTS API.
     Handles long scripts by splitting them into smaller chunks.
@@ -104,15 +137,40 @@ def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-
     print(f"Converting script '{script_file}' to audio...")
 
     # Read the script content
-    with open(script_file, "r", encoding="utf-8") as f:
-        script_content = f.read()
+    try:
+        with open(script_file, "r", encoding="utf-8") as f:
+            script_content = f.read()
+            
+        if not script_content.strip():
+            print(f"Warning: Script file '{script_file}' is empty!")
+            return False
+    except FileNotFoundError:
+        print(f"Error: Script file '{script_file}' not found!")
+        return False
+    except Exception as e:
+        print(f"Error reading script file: {e}")
+        return False
 
     # Split the content into smaller chunks
     chunks = split_text(script_content)
     print(f"Split script into {len(chunks)} chunks")
 
     # Create OpenAI client
-    client = openai.OpenAI()
+    try:
+        client = openai.OpenAI()
+    except Exception as e:
+        print(f"Error initializing OpenAI client: {e}")
+        print("Make sure your OPENAI_API_KEY environment variable is set correctly.")
+        return False
+        
+    # Determine appropriate voice if language is specified
+    if language:
+        original_voice = voice
+        voice = determine_voice_for_language(language)
+        if original_voice != voice:
+            print(f"Using voice '{voice}' for language '{language}' (changed from '{original_voice}')")
+        else:
+            print(f"Using voice '{voice}' for language '{language}'")
 
     # Ensure output directory exists
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
@@ -168,6 +226,9 @@ def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-
                     pass
 
     print("Conversion complete!")
+    
+    # Return True to indicate success
+    return True
 
 
 if __name__ == "__main__":
@@ -200,6 +261,12 @@ if __name__ == "__main__":
         help="OpenAI voice to use (default: alloy)",
     )
     parser.add_argument(
+        "--language",
+        "-l",
+        type=str,
+        help="Language of the script (e.g., 'english', 'french') for automatic voice selection",
+    )
+    parser.add_argument(
         "--model",
         "-m",
         type=str,
@@ -220,6 +287,24 @@ if __name__ == "__main__":
         exit(1)
 
     # Convert script to audio
-    convert_script_to_audio(
-        script_file, output_file, voice=args.voice, model=args.model
+    result = convert_script_to_audio(
+        script_file=args.script,
+        output_file=args.output,
+        voice=args.voice,
+        model=args.model,
+        language=args.language,
     )
+    
+    # Check if conversion was successful
+    if result is False:
+        print("\nConversion failed! Please check the error messages above.")
+        exit(1)
+    
+    # Verify the output file exists and has content
+    output_path = Path(args.output)
+    if not output_path.exists():
+        print(f"\nError: Output file '{args.output}' was not created!")  
+        exit(1)
+    elif output_path.stat().st_size < 1000:  # Less than 1KB is suspicious
+        print(f"\nWarning: Output file '{args.output}' is suspiciously small ({output_path.stat().st_size} bytes)")
+        print("The audio file may be empty or corrupted.")
