@@ -6,7 +6,9 @@ This module implements a lightweight flow for processing different file types
 and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY principles.
 """
 from typing import List
-from pathlib import Path
+from pathlib import Pat
+
+import argparse
 import os
 
 from crewai.flow import Flow, listen, start, router, and_
@@ -103,17 +105,24 @@ class SonicFlow(Flow[SonicState]):
     def start_research(self):
         """Start research after indexing."""
         print("Starting research")
-
         # Ensure the output directory exists before research begins
         os.makedirs("output", exist_ok=True)
 
-        request = read_file("src/mind_sonic/request.txt")
-        inputs={
-            "query":request,
-            "current_year":datetime.now().year
-            }
-        
-        ResearchCrew().crew().kickoff(inputs=inputs) 
+        query = getattr(self, "query", None)
+        if query is None:
+            request_file = Path(__file__).with_name("request.txt")
+            if request_file.exists():
+                query = read_file(request_file)
+            else:
+                query = ""
+
+        inputs = {
+            "query": query,
+            "current_year": datetime.now().year,
+        }
+
+        ResearchCrew().crew().kickoff(inputs=inputs)
+
         
     @listen(start_research)
     def end_research(self):
@@ -123,9 +132,11 @@ class SonicFlow(Flow[SonicState]):
         self.state.poem = poem
         print(poem)
 
-def kickoff() -> None:
+def kickoff(query: str | None = None) -> None:
     """Start the SonicFlow execution."""
     sonic_flow = SonicFlow()
+    if query is not None:
+        sonic_flow.query = query
     sonic_flow.kickoff()
 
 
@@ -136,4 +147,11 @@ def plot() -> None:
 
 
 if __name__ == "__main__":
-    kickoff()
+    parser = argparse.ArgumentParser(description="Run the MindSonic flow")
+    parser.add_argument(
+        "--query",
+        help="Research query to override the content of request.txt",
+    )
+    args = parser.parse_args()
+
+    kickoff(query=args.query)
