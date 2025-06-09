@@ -87,6 +87,15 @@ The MindSonic flow follows a simple pattern:
 
 The flow is visualized in `crewai_flow.html` which you can view in any browser.
 
+## Logging
+
+During execution, MindSonic writes two log files to the `logs` folder:
+
+- `trace.log` records all log messages for later inspection
+- `errors.log` captures only error messages for quick troubleshooting
+
+Both files are created automatically when you run the flow.
+
 ## Documentation
 
 Additional documentation can be found in the `documentation` folder:

@@ -6,9 +6,12 @@ This module contains utilities for processing files of various types.
 """
 from pathlib import Path
 from typing import List
+import logging
 
 from mind_sonic.crews.indexer_crew.indexer_crew import IndexerCrew
 from mind_sonic.utils.file_archiver import archive_files
+
+logger = logging.getLogger(__name__)
 
 
 def process_files(file_list: List[str], file_type: str) -> None:
@@ -18,13 +21,13 @@ def process_files(file_list: List[str], file_type: str) -> None:
         file_list: List of files to process
         file_type: Type of files being processed
     """
-    print(f"Indexing {file_type}")
+    logger.info("Indexing %s", file_type)
     for file in file_list:
-        print(Path(file).name)
+        logger.info(Path(file).name)
         try:
             indexer = IndexerCrew()
             result = indexer.process_file({"file": file, "suffix": file_type})
-            print(result)
+            logger.info(result)
             archive_files(file)
         except Exception as e:
-            print(f"Error indexing {file}: {e}")
+            logger.error("Error indexing %s: %s", file, e)
