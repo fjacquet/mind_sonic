@@ -5,7 +5,7 @@ MindSonic Data Models
 This module contains the data models used throughout the MindSonic application.
 """
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class DocumentState(BaseModel):
@@ -13,13 +13,13 @@ class DocumentState(BaseModel):
     
     Each attribute represents a collection of files of a specific type.
     """
-    list_txt: List[str] = []
-    list_csv: List[str] = []
-    list_docx: List[str] = []
-    list_html: List[str] = []
-    list_md: List[str] = []
-    list_pdf: List[str] = []
-    list_xlsx: List[str] = []
+    list_txt: List[str] = Field(default_factory=list)
+    list_csv: List[str] = Field(default_factory=list)
+    list_docx: List[str] = Field(default_factory=list)
+    list_html: List[str] = Field(default_factory=list)
+    list_md: List[str] = Field(default_factory=list)
+    list_pdf: List[str] = Field(default_factory=list)
+    list_xlsx: List[str] = Field(default_factory=list)
 
 
 class SonicState(BaseModel):
