@@ -23,7 +23,7 @@ from mind_sonic.utils.file_processor import process_files
 from mind_sonic.utils.logging_utils import setup_logging
 
 # Configure logging
-logger = setup_logging(component="main")
+logger = setup_logging()  # No component specified - logs will go directly to logs directory
 logger.info("MindSonic application starting")
 
 

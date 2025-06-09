@@ -12,3 +12,4 @@ lib/
 storage/chroma/
 logs/*
 !logs/.gitkeep
+uv.lock

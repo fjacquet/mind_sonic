@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 MindSonic Logging Utilities
 
@@ -12,7 +11,39 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, Type
+
+
+class ColoredFormatter(logging.Formatter):
+    """
+    Custom formatter that adds colors to log messages based on their level.
+    
+    This enhances readability in terminal output by color-coding different log levels.
+    """
+    
+    COLORS = {
+        'DEBUG': '\033[36m',     # Cyan
+        'INFO': '\033[32m',      # Green
+        'WARNING': '\033[33m',   # Yellow
+        'ERROR': '\033[31m',     # Red
+        'CRITICAL': '\033[1;31m', # Bold Red
+        'RESET': '\033[0m'       # Reset
+    }
+    
+    def format(self, record: logging.LogRecord) -> str:
+        """
+        Format the log record with color codes based on log level.
+        
+        Args:
+            record: LogRecord to format
+            
+        Returns:
+            Formatted log message with appropriate color codes
+        """
+        levelname = record.levelname
+        if levelname in self.COLORS:
+            record.levelname = f"{self.COLORS[levelname]}{levelname}{self.COLORS['RESET']}"
+        return super().format(record)
 
 
 def setup_logging(log_level=logging.INFO, component: Optional[str] = None) -> logging.Logger:
@@ -65,21 +96,84 @@ def setup_logging(log_level=logging.INFO, component: Optional[str] = None) -> lo
     # Get logger
     logger_name = f"mind_sonic.{component}" if component else "mind_sonic"
     logger = logging.getLogger(logger_name)
-    logger.setLevel(log_level)
     
     # Remove existing handlers if any
     if logger.hasHandlers():
         logger.handlers.clear()
     
-    # Add handlers
-    logger.addHandler(trace_handler)
-    logger.addHandler(error_handler)
-    logger.addHandler(stream_handler)
+    # Set log level
+    if isinstance(log_level, str):
+        level = getattr(logging, log_level.upper(), logging.INFO)
+    else:
+        level = log_level or logging.INFO
+    logger.setLevel(level)
     
-    # Prevent propagation to root logger
-    logger.propagate = False
+    # Create formatters
+    log_format = (
+        "%(asctime)s - %(name)s - %(levelname)s - "
+        "%(filename)s:%(lineno)d - %(message)s"
+    )
+    
+    # Console handler with colors
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(ColoredFormatter(log_format))
+    logger.addHandler(console_handler)
+    
+    # File handler with rotation
+    logs_dir = Path("logs")
+    logs_dir.mkdir(exist_ok=True)
+    log_file = logs_dir / f"mind_sonic_{datetime.now().strftime('%Y%m%d')}.log"
+    file_handler = logging.handlers.RotatingFileHandler(
+        log_file,
+        maxBytes=10 * 1024 * 1024,  # 10MB
+        backupCount=5,
+        encoding='utf-8'
+    )
+    file_handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(file_handler)
+    
+    # Add exception formatting
+    def handle_exception(exc_type: Type[BaseException], 
+                        exc_value: BaseException, 
+                        exc_traceback: Any) -> None:
+        """Handle uncaught exceptions."""
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+            
+        logger.critical(
+            "Uncaught exception", 
+            exc_info=(exc_type, exc_value, exc_traceback)
+        )
+    
+    sys.excepthook = handle_exception
     
     return logger
+
+
+def log_execution_time(logger: logging.Logger):
+    """Decorator to log execution time of functions."""
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            start_time = datetime.now()
+            try:
+                result = func(*args, **kwargs)
+                elapsed = (datetime.now() - start_time).total_seconds()
+                logger.debug(
+                    "%s executed in %.2f seconds", 
+                    func.__qualname__, 
+                    elapsed
+                )
+                return result
+            except Exception as e:
+                logger.exception(
+                    "Error in %s: %s", 
+                    func.__qualname__, 
+                    str(e)
+                )
+                raise
+        return wrapper
+    return decorator
 
 
 def get_logger(component: Optional[str] = None) -> logging.Logger:
