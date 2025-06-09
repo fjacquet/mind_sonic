@@ -39,6 +39,12 @@ For detailed installation instructions including alternative methods, troublesho
 - Modify `src/mind_sonic/config/tasks.yaml` to define your tasks
 - Modify `src/mind_sonic/crew.py` to add your own logic, tools and specific args
 - Modify `src/mind_sonic/main.py` to add custom inputs for your agents and tasks
+ - The ResearchCrew already uses built-in tools like `SerperDevTool`,
+   `ScrapeWebsiteTool`, and `YFinanceTool` to gather information from the web and
+   financial data sources.
+ - A custom `SaveToRag` tool (see `src/mind_sonic/tools/save_to_rag_tool.py`)
+   lets the agents store any useful text in the RAG vector store for future
+   queries.
 
 ## Running the Project
 

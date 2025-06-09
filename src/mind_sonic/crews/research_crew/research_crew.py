@@ -2,7 +2,9 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
-from crewai_tools import RagTool
+from crewai_tools import RagTool, SerperDevTool, ScrapeWebsiteTool, YFinanceTool
+from mind_sonic.tools import SaveToRagTool
+from mind_sonic.rag_config import DEFAULT_RAG_CONFIG
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
 # https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
@@ -13,38 +15,13 @@ class ResearchCrew():
 
     agents: List[BaseAgent]
     tasks: List[Task]
- # Create a RAG tool with custom configuration
-    config = {
-        "llm": {
-            "provider": "openai",
-            "config": {
-                "model": "gpt-4.1-mini",
-                "temperature": 0.7,
-                "max_tokens": 1000
-            }
-        },
-        "embedder": {
-            "provider": "openai",
-            "config": {
-                "model": "text-embedding-3-large"
-            }
-        },
-        "vectordb": {
-            "provider": "chroma",
-            "config": {
-                "collection_name": "mind_sonic",
-                "dir": "./storage/chroma",
-                "allow_reset": True
-            }
-        },
-        "chunker": {
-            "chunk_size": 400,
-            "chunk_overlap": 100,
-            "length_function": "len",
-            "min_chunk_size": 0
-        }
-    }
+    # Create a RAG tool with shared configuration
+    config = DEFAULT_RAG_CONFIG
     rag_tool = RagTool(config=config, summarize=True)
+    serper_tool = SerperDevTool()
+    scrape_tool = ScrapeWebsiteTool()
+    finance_tool = YFinanceTool()
+    save_tool = SaveToRagTool(rag_tool)
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
@@ -55,7 +32,13 @@ class ResearchCrew():
     def researcher(self) -> Agent:
         return Agent(
             config=self.agents_config['researcher'], # type: ignore[index]
-            tools=[self.rag_tool],
+            tools=[
+                self.rag_tool,
+                self.serper_tool,
+                self.scrape_tool,
+                self.finance_tool,
+                self.save_tool,
+            ],
             allow_delegation=False,
             verbose=True,
             reasoning=True,
@@ -66,7 +49,10 @@ class ResearchCrew():
     def reporting_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['reporting_analyst'], # type: ignore[index]
-            tools=[self.rag_tool],
+            tools=[
+                self.rag_tool,
+                self.save_tool,
+            ],
             allow_delegation=False,
             verbose=True,
             reasoning=True,
