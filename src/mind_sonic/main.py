@@ -7,6 +7,7 @@ and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY prin
 """
 from typing import List
 from pathlib import Path
+import os
 
 from crewai.flow import Flow, listen, start, router, and_
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
@@ -102,7 +103,10 @@ class SonicFlow(Flow[SonicState]):
     def start_research(self):
         """Start research after indexing."""
         print("Starting research")
-        
+
+        # Ensure the output directory exists before research begins
+        os.makedirs("output", exist_ok=True)
+
         request = read_file("src/mind_sonic/request.txt")
         inputs={
             "query":request,
