@@ -85,7 +85,7 @@ Ensure the following directories exist for proper operation:
 
 ```bash
 # Create knowledge directories
-mkdir -p knowledge/txt knowledge/csv knowledge/docx knowledge/html knowledge/md knowledge/pdf knowledge/xlsx
+mkdir -p knowledge/txt knowledge/csv knowledge/docx knowledge/html knowledge/md knowledge/pdf knowledge/pptx knowledge/xlsx
 
 # Create archive directory
 mkdir -p archive

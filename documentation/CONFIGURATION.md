@@ -86,6 +86,7 @@ MindSonic expects certain directories to exist for proper operation:
   - `html/`: HTML files
   - `md/`: Markdown files
   - `pdf/`: PDF files
+  - `pptx/`: PowerPoint files
   - `xlsx/`: Excel files
 - `archive/`: Directory where processed files are moved after indexing
 

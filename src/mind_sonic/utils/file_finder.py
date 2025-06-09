@@ -34,6 +34,7 @@ def find_files(knowledge_dir: str, document_state: DocumentState) -> DocumentSta
         'html': document_state.list_html,
         'md': document_state.list_md,
         'pdf': document_state.list_pdf,
+        'pptx': document_state.list_pptx,
         'xlsx': document_state.list_xlsx
     }
     
