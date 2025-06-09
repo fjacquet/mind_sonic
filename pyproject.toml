@@ -1,0 +1,25 @@
+[project]
+name = "mind_sonic"
+version = "0.1.0"
+description = "mind_sonic using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai-tools>=0.46.0",
+    "crewai[tools]>=0.120.1,<1.0.0",
+    "embedchain>=0.1.128",
+    "firecrawl-py>=2.8.0",
+    "yfinance>=0.2.62",
+]
+
+[project.scripts]
+kickoff = "mind_sonic.main:kickoff"
+run_crew = "mind_sonic.main:kickoff"
+plot = "mind_sonic.main:plot"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "flow"

@@ -1,0 +1,11 @@
+.env
+__pycache__/
+lib/
+.DS_Store
+*.txt
+*.csv
+*.docx
+*.html
+*.pdf
+*.xlsx
+storage/chroma

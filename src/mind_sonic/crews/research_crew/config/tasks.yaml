@@ -1,0 +1,75 @@
+research_task:
+  description: >
+    Conduct comprehensive research on "{query}" with the following objectives:
+    1. Gather current, accurate information considering that the current year is {current_year}
+    2. Focus on factual data, statistics, and expert opinions from authoritative sources
+    3. Include relevant technical specifications, comparisons with alternatives, and market positioning
+    4. Identify both strengths and potential limitations or considerations
+    5. Research real-world implementations, case studies, and success metrics
+    6. Consider industry trends and future developments related to the query
+    7. Organize findings into clear categories (e.g., benefits, features, use cases, limitations)
+    8. Prioritize information based on relevance and importance to potential decision-makers
+    9. Include references to official documentation, whitepapers, and technical resources
+    10. Identify relevant knowledge base articles or support documentation when applicable
+    
+    For each research point, clearly cite the source of information using the following format:
+    - For websites: [Website Name] (URL if available)
+    - For technical documentation: [Product/Technology Name Documentation] (version/date if available)
+    - For research papers: [Authors] (Year), [Title], [Publication]
+    - For expert opinions: [Expert Name], [Credentials/Organization], [Context of statement]
+    - For statistical data: [Organization/Source], [Report/Survey name], [Year]
+    
+    Include a "References" section at the end of the research document with a complete list of all sources used.
+  expected_output: >
+    A structured research document containing:
+    - At least 15 well-researched, factual points organized by category
+    - Each point should include specific details, metrics, or examples where applicable
+    - Every factual claim must have a citation to its source
+    - Clear distinction between established facts and emerging trends
+    - Comparative analysis with alternatives or competitors where relevant
+    - Balanced coverage of both advantages and considerations
+    - Links to official documentation, technical resources, and knowledge base articles
+    - A comprehensive "References" section at the end with all sources properly formatted
+    - Each reference should include author/organization, title, date, and access information where available
+  agent: researcher
+
+reporting_task:
+  description: >
+    Create a professional HTML report based on the research findings. Your report should:
+    1. Begin with an executive summary that includes the original question: "{query}"
+    2. Organize information into clear, well-structured sections with appropriate headings
+    3. Include relevant statistics, examples, and case studies where available
+    4. Provide a balanced analysis of benefits and potential limitations
+    5. End with a concise conclusion and recommendations
+    6. Format the document professionally with proper spacing, colors, and styling
+    7. Use appropriate emojis throughout the report to enhance readability and visual appeal
+    8. Ensure proper UTF-8 encoding declaration in the HTML to avoid encoding issues with emojis
+    9. Use HTML entities for special characters when necessary to ensure cross-browser compatibility
+    10. Include links to relevant documentation, implementation guides, and technical resources
+    11. Add references to official product documentation and support resources where applicable
+    
+    The HTML report must include a dedicated "References" section that properly formats all citations from the research:
+    - Format each reference according to a consistent citation style (APA preferred)
+    - Include hyperlinks to online sources where available
+    - Organize references alphabetically by author/source name
+    - For each claim or statistic in the report, include a superscript number that links to the corresponding reference
+    - Include a "Sources" heading in the table of contents
+    - Format the references section with proper HTML structure for accessibility and readability
+  expected_output: >
+    A comprehensive professional HTML report that includes:
+    - Proper HTML5 doctype and UTF-8 charset declaration in the head section
+    - Modern, clean HTML formatting with embedded CSS styling
+    - Title with current date and relevant emoji
+    - Executive summary with the original question clearly stated
+    - Table of contents with emoji icons for each section
+    - Main content organized in logical sections with headings and subheadings
+    - Each key point highlighted with a relevant emoji for visual clarity
+    - Inline citations using superscript numbers that link to the references section
+    - Conclusion with key takeaways
+    - A dedicated "References" section with properly formatted citations in APA style
+    - Citations should include hyperlinks to online sources where available
+    - References should be organized alphabetically by author/source name
+    - The entire report should be in valid HTML format that can be viewed directly in a browser
+    - All emojis should be properly encoded and display correctly across different browsers
+  agent: reporting_analyst
+  output_file: output/answer.html
