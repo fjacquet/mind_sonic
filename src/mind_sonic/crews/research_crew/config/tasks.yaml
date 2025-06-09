@@ -50,7 +50,7 @@ research_task:
 
 reporting_task:
   description: >
-    Create a professional HTML report based on the research findings. Your report should:
+    Create a professional HTML report based on the research findings from the previous task. Use the complete research data provided by the researcher agent. Your report should:
     1. Begin with an executive summary that includes the original question: "{query}"
     2. Organize information into clear, well-structured sections with appropriate headings
     3. Include relevant statistics, examples, and case studies where available

@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional, Type, Any
 
 from crewai_tools import RagTool
 from crewai.tools import BaseTool
@@ -19,11 +19,12 @@ class SaveToRagTool(BaseTool):
     name: str = "SaveToRag"
     description: str = "Persist text so it can be retrieved later via the RAG tool."
     args_schema: Type[BaseModel] = SaveToRagInput
+    rag_tool: Any = None  # Define rag_tool as a field
 
     def __init__(self, rag_tool: Optional[RagTool] = None) -> None:
         super().__init__()
-        self.rag_tool = rag_tool or RagTool(config=DEFAULT_RAG_CONFIG, summarize=True)
+        self._rag_tool = rag_tool or RagTool(config=DEFAULT_RAG_CONFIG, summarize=True)
 
     def _run(self, text: str) -> str:
-        self.rag_tool.add(source=text, data_type="text")
+        self._rag_tool.add(source=text, data_type="text")
         return "stored"
