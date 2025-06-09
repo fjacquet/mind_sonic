@@ -95,10 +95,7 @@ class SonicFlow(Flow[SonicState]):
     )
     def end_indexing(self):
         """Generate a poem after all files are processed."""
-        print("Indexing done")
-        poem = PoemCrew().crew().kickoff()
-        self.state.poem = poem
-        print(poem)
+        print("Indexing done"
 
 
     @listen(end_indexing)
@@ -113,6 +110,14 @@ class SonicFlow(Flow[SonicState]):
             }
         
         ResearchCrew().crew().kickoff(inputs=inputs) 
+        
+    @listen(start_research)
+    def end_research(self):
+        """Generate a poem after research."""
+        print("Research done, let's finish with a poem")
+        poem = PoemCrew().crew().kickoff()
+        self.state.poem = poem
+        print(poem)
 
 def kickoff() -> None:
     """Start the SonicFlow execution."""

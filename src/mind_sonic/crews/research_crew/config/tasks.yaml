@@ -12,6 +12,16 @@ research_task:
     9. Include references to official documentation, whitepapers, and technical resources
     10. Identify relevant knowledge base articles or support documentation when applicable
     
+    IMPORTANT INSTRUCTIONS - YOU MUST FOLLOW THESE EXACTLY:
+    - Provide an EXHAUSTIVE answer based on ALL available knowledge - do not summarize or condense information
+    - Include AT LEAST 20 detailed, factual points with specific metrics, examples, and technical details
+    - Do not skip any part of the research requirements due to perceived constraints - be thorough and complete
+    - Ensure EVERY technical claim is supported by specific data points or authoritative sources
+    - Include detailed performance metrics, compatibility information, and technical specifications
+    - Provide comprehensive analysis of ALL use cases, not just the most common ones
+    - When comparing with alternatives, include detailed feature-by-feature comparisons
+    - Do not generalize or use vague statements - be specific and precise in all claims
+    
     For each research point, clearly cite the source of information using the following format:
     - For websites: [Website Name] (URL if available)
     - For technical documentation: [Product/Technology Name Documentation] (version/date if available)
@@ -22,15 +32,20 @@ research_task:
     Include a "References" section at the end of the research document with a complete list of all sources used.
   expected_output: >
     A structured research document containing:
-    - At least 15 well-researched, factual points organized by category
-    - Each point should include specific details, metrics, or examples where applicable
-    - Every factual claim must have a citation to its source
-    - Clear distinction between established facts and emerging trends
-    - Comparative analysis with alternatives or competitors where relevant
-    - Balanced coverage of both advantages and considerations
+    - At least 20 well-researched, factual points organized by category
+    - Each point must include specific details, metrics, technical specifications, and concrete examples
+    - Every factual claim must have a citation to its source with proper formatting
+    - Detailed performance metrics and benchmarks with specific numbers and testing conditions
+    - Comprehensive feature-by-feature comparison with at least 3 competing alternatives
+    - Clear distinction between established facts and emerging trends with evidence for each
+    - In-depth analysis of ALL relevant use cases with specific implementation details
+    - Detailed technical specifications including hardware requirements, software compatibility, and system architecture
+    - Exhaustive coverage of both advantages and limitations with quantifiable metrics
     - Links to official documentation, technical resources, and knowledge base articles
-    - A comprehensive "References" section at the end with all sources properly formatted
-    - Each reference should include author/organization, title, date, and access information where available
+    - At least 3 real-world case studies with specific outcomes and metrics
+    - Detailed pricing information and TCO (Total Cost of Ownership) analysis when applicable
+    - A comprehensive "References" section with at least 15 diverse, authoritative sources
+    - Each reference must include author/organization, title, date, and access information where available
   agent: researcher
 
 reporting_task:
@@ -48,6 +63,18 @@ reporting_task:
     10. Include links to relevant documentation, implementation guides, and technical resources
     11. Add references to official product documentation and support resources where applicable
     
+    IMPORTANT INSTRUCTIONS - YOU MUST FOLLOW THESE EXACTLY:
+    - Create an EXHAUSTIVE report that includes ALL information from the research document
+    - Do NOT summarize or condense the research - include ALL details, metrics, and technical specifications
+    - Include ALL 20+ factual points from the research, maintaining their technical depth and specificity
+    - Create detailed data tables for technical specifications and feature comparisons
+    - Include ALL performance metrics with their specific values and testing conditions
+    - Maintain ALL detailed feature-by-feature comparisons with competing alternatives
+    - Include ALL case studies with their specific outcomes and metrics
+    - Create visual elements (tables, lists, etc.) to enhance readability without losing information
+    - Do not skip ANY technical details due to perceived complexity - include everything
+    - Ensure the report is comprehensive while maintaining professional formatting and readability
+    
     The HTML report must include a dedicated "References" section that properly formats all citations from the research:
     - Format each reference according to a consistent citation style (APA preferred)
     - Include hyperlinks to online sources where available
@@ -55,18 +82,25 @@ reporting_task:
     - For each claim or statistic in the report, include a superscript number that links to the corresponding reference
     - Include a "Sources" heading in the table of contents
     - Format the references section with proper HTML structure for accessibility and readability
+    - Include ALL references from the research document (at least 15 diverse sources)
   expected_output: >
     A comprehensive professional HTML report that includes:
     - Proper HTML5 doctype and UTF-8 charset declaration in the head section
     - Modern, clean HTML formatting with embedded CSS styling
     - Title with current date and relevant emoji
     - Executive summary with the original question clearly stated
-    - Table of contents with emoji icons for each section
+    - Detailed table of contents with emoji icons for each section and subsection
     - Main content organized in logical sections with headings and subheadings
+    - ALL 20+ factual points from the research document, maintaining their full technical depth
+    - Detailed data tables for technical specifications and feature comparisons
     - Each key point highlighted with a relevant emoji for visual clarity
+    - ALL performance metrics with their specific values and testing conditions
+    - Complete feature-by-feature comparison tables with at least 3 competing alternatives
+    - ALL case studies with their specific outcomes and metrics
+    - Detailed pricing information and TCO analysis when applicable
     - Inline citations using superscript numbers that link to the references section
-    - Conclusion with key takeaways
-    - A dedicated "References" section with properly formatted citations in APA style
+    - Comprehensive conclusion with detailed recommendations
+    - A dedicated "References" section with at least 15 properly formatted citations in APA style
     - Citations should include hyperlinks to online sources where available
     - References should be organized alphabetically by author/source name
     - The entire report should be in valid HTML format that can be viewed directly in a browser
