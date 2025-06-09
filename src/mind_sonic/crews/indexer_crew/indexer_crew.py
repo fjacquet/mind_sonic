@@ -3,6 +3,7 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai_tools import RagTool
 from typing import List
+from mind_sonic.rag_config import DEFAULT_RAG_CONFIG
 
 from mind_sonic.utils.file_type_utils import get_embedchain_data_type
 # If you want to run a snippet of code before or after the crew starts,
@@ -21,38 +22,8 @@ class IndexerCrew():
     agents: List[BaseAgent]
     tasks: List[Task]
 
-    # Create a RAG tool with custom configuration
-    config = {
-        "llm": {
-            "provider": "openai",
-            "config": {
-                "model": "gpt-4.1-mini",
-                "temperature": 0.7,
-                "max_tokens": 1000
-            }
-        },
-        "embedder": {
-            "provider": "openai",
-            "config": {
-                "model": "text-embedding-3-large"
-            }
-        },
-        "vectordb": {
-            "provider": "chroma",
-            "config": {
-                "collection_name": "mind_sonic",
-                "dir": "./storage/chroma",
-                "allow_reset": True
-            }
-        },
-        "chunker": {
-            "chunk_size": 400,
-            "chunk_overlap": 100,
-            "length_function": "len",
-            "min_chunk_size": 0
-        }
-    }
-
+    # Create a RAG tool with shared configuration
+    config = DEFAULT_RAG_CONFIG
     rag_tool = RagTool(config=config, summarize=True)
 
 
