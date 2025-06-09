@@ -40,7 +40,22 @@ class IndexerCrew():
         """
         file = input_data["file"]
         datatype = get_embedchain_data_type(file) or input_data["suffix"]
-        self.rag_tool.add(source=file, data_type=datatype)
+        
+        # Special handling for PowerPoint files
+        if datatype == "custom" and file.lower().endswith((".pptx", ".ppt")):
+            from mind_sonic.loaders.pptx_loader import PowerPointLoader
+            from mind_sonic.loaders.pptx_chunker import PowerPointChunker
+            
+            # Create custom loader and chunker for PowerPoint files
+            loader = PowerPointLoader()
+            chunker = PowerPointChunker()
+            
+            # Add the file with custom loader and chunker
+            self.rag_tool.add(source=file, data_type=datatype, loader=loader, chunker=chunker)
+        else:
+            # Standard processing for other file types
+            self.rag_tool.add(source=file, data_type=datatype)
+            
         return f"Processed {file} of type {datatype}"
 
 

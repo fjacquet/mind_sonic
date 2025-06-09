@@ -56,7 +56,12 @@ def get_embedchain_data_type(file_path: str) -> Optional[str]:
         # Default for general web pages if no specific type is matched
         return "web_page"
 
-    # Return the mapped type for known suffixes
+    # Special handling for PowerPoint files
+    if file_extension in [".pptx", ".ppt"]:
+        # Return 'custom' to trigger custom loader usage
+        return "custom"
+        
+    # Return the mapped type for other known suffixes
     if file_extension in suffix_to_type:
         return suffix_to_type[file_extension]
 

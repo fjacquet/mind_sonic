@@ -9,6 +9,7 @@ dependencies = [
     "crewai[tools]>=0.120.1,<1.0.0",
     "embedchain>=0.1.128",
     "firecrawl-py>=2.8.0",
+    "python-pptx>=1.0.2",
     "yfinance>=0.2.62",
 ]
 

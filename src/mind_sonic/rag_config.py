@@ -1,3 +1,8 @@
+import os
+
+# Get the project root directory (2 levels up from this file)
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 DEFAULT_RAG_CONFIG = {
     "llm": {
         "provider": "openai",
@@ -17,7 +22,7 @@ DEFAULT_RAG_CONFIG = {
         "provider": "chroma",
         "config": {
             "collection_name": "mind_sonic",
-            "dir": "./storage/chroma",
+            "dir": os.path.join(PROJECT_ROOT, "storage/chroma"),  # Absolute path to storage directory
             "allow_reset": True,
         },
     },
