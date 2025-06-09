@@ -7,6 +7,28 @@ and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY prin
 """
 from typing import List
 from pathlib import Path
+import logging
+
+# Create logs directory
+LOG_DIR = Path(__file__).resolve().parents[2] / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+trace_handler = logging.FileHandler(LOG_DIR / "trace.log")
+trace_handler.setLevel(logging.INFO)
+
+error_handler = logging.FileHandler(LOG_DIR / "errors.log")
+error_handler.setLevel(logging.ERROR)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=_LOG_FORMAT,
+    handlers=[trace_handler, error_handler, stream_handler],
+)
 
 from crewai.flow import Flow, listen, start, router, and_
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
@@ -16,6 +38,8 @@ from mind_sonic.models import DocumentState, SonicState
 from mind_sonic.utils.file_finder import find_files
 from mind_sonic.utils.file_processor import process_files
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 
 def read_file(file_path: str) -> str:
@@ -35,14 +59,14 @@ class SonicFlow(Flow[SonicState]):
     @start()
     def list_files(self):
         """Entry point: find all files to process."""
-        print("Listing files")
+        logger.info("Listing files")
         document_state = DocumentState()
         self.state.document_state = find_files("knowledge", document_state)
 
     @router(list_files)
     def start_indexing(self):
         """Route to parallel indexing processes."""
-        print("Starting indexing")
+        logger.info("Starting indexing")
 
 
 
@@ -95,13 +119,13 @@ class SonicFlow(Flow[SonicState]):
     )
     def end_indexing(self):
         """Meeting point after all files are processed."""
-        print("Indexing done")
+        logger.info("Indexing done")
 
 
     @listen(end_indexing)
     def start_research(self):
         """Start research after indexing."""
-        print("Starting research")
+        logger.info("Starting research")
         
         request = read_file("src/mind_sonic/request.txt")
         inputs={
@@ -114,10 +138,10 @@ class SonicFlow(Flow[SonicState]):
     @listen(start_research)
     def end_research(self):
         """Generate a poem after research."""
-        print("Research done, let's finish with a poem")
+        logger.info("Research done, let's finish with a poem")
         poem = PoemCrew().crew().kickoff()
         self.state.poem = poem
-        print(poem)
+        logger.info(poem)
 
 def kickoff() -> None:
     """Start the SonicFlow execution."""
