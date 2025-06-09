@@ -6,42 +6,24 @@ This module implements a lightweight flow for processing different file types
 and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY principles.
 """
 from typing import List
-
-from pathlib import Path
-import logging
 import argparse
+import logging
 import os
-# Create logs directory
-LOG_DIR = Path(__file__).resolve().parents[2] / "logs"
-LOG_DIR.mkdir(exist_ok=True)
+from datetime import datetime
+from pathlib import Path
 
-_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+from crewai.flow import Flow, and_, listen, router, start
 
-trace_handler = logging.FileHandler(LOG_DIR / "trace.log")
-trace_handler.setLevel(logging.INFO)
-
-error_handler = logging.FileHandler(LOG_DIR / "errors.log")
-error_handler.setLevel(logging.ERROR)
-
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-
-logging.basicConfig(
-    level=logging.INFO,
-    format=_LOG_FORMAT,
-    handlers=[trace_handler, error_handler, stream_handler],
-)
-
-
-from crewai.flow import Flow, listen, start, router, and_
-from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
 from mind_sonic.crews.indexer_crew.indexer_crew import IndexerCrew
+from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
 from mind_sonic.crews.research_crew.research_crew import ResearchCrew
 from mind_sonic.models import DocumentState, SonicState
 from mind_sonic.utils.file_finder import find_files
 from mind_sonic.utils.file_processor import process_files
-from datetime import datetime
+from mind_sonic.utils.logging_utils import setup_logging
 
+# Configure logging
+setup_logging()
 logger = logging.getLogger(__name__)
 
 
