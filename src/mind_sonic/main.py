@@ -94,8 +94,8 @@ class SonicFlow(Flow[SonicState]):
         )
     )
     def end_indexing(self):
-        """Generate a poem after all files are processed."""
-        print("Indexing done"
+        """Meeting point after all files are processed."""
+        print("Indexing done")
 
 
     @listen(end_indexing)
