@@ -6,8 +6,10 @@ This module implements a lightweight flow for processing different file types
 and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY principles.
 """
 from typing import List
-from pathlib import Path
+from pathlib import Pat
+
 import argparse
+import os
 
 from crewai.flow import Flow, listen, start, router, and_
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
@@ -103,6 +105,9 @@ class SonicFlow(Flow[SonicState]):
     def start_research(self):
         """Start research after indexing."""
         print("Starting research")
+        # Ensure the output directory exists before research begins
+        os.makedirs("output", exist_ok=True)
+
         query = getattr(self, "query", None)
         if query is None:
             request_file = Path(__file__).with_name("request.txt")
@@ -117,6 +122,7 @@ class SonicFlow(Flow[SonicState]):
         }
 
         ResearchCrew().crew().kickoff(inputs=inputs)
+
         
     @listen(start_research)
     def end_research(self):
