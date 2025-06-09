@@ -6,9 +6,11 @@ This module implements a lightweight flow for processing different file types
 and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY principles.
 """
 from typing import List
+
 from pathlib import Path
 import logging
-
+import argparse
+import os
 # Create logs directory
 LOG_DIR = Path(__file__).resolve().parents[2] / "logs"
 LOG_DIR.mkdir(exist_ok=True)
@@ -29,6 +31,7 @@ logging.basicConfig(
     format=_LOG_FORMAT,
     handlers=[trace_handler, error_handler, stream_handler],
 )
+
 
 from crewai.flow import Flow, listen, start, router, and_
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
@@ -125,15 +128,26 @@ class SonicFlow(Flow[SonicState]):
     @listen(end_indexing)
     def start_research(self):
         """Start research after indexing."""
-        logger.info("Starting research")
-        
-        request = read_file("src/mind_sonic/request.txt")
-        inputs={
-            "query":request,
-            "current_year":datetime.now().year
-            }
-        
-        ResearchCrew().crew().kickoff(inputs=inputs) 
+
+        print("Starting research")
+        # Ensure the output directory exists before research begins
+        os.makedirs("output", exist_ok=True)
+
+        query = getattr(self, "query", None)
+        if query is None:
+            request_file = Path(__file__).with_name("request.txt")
+            if request_file.exists():
+                query = read_file(request_file)
+            else:
+                query = ""
+
+        inputs = {
+            "query": query,
+            "current_year": datetime.now().year,
+        }
+
+        ResearchCrew().crew().kickoff(inputs=inputs)
+
         
     @listen(start_research)
     def end_research(self):
@@ -143,9 +157,11 @@ class SonicFlow(Flow[SonicState]):
         self.state.poem = poem
         logger.info(poem)
 
-def kickoff() -> None:
+def kickoff(query: str | None = None) -> None:
     """Start the SonicFlow execution."""
     sonic_flow = SonicFlow()
+    if query is not None:
+        sonic_flow.query = query
     sonic_flow.kickoff()
 
 
@@ -156,4 +172,11 @@ def plot() -> None:
 
 
 if __name__ == "__main__":
-    kickoff()
+    parser = argparse.ArgumentParser(description="Run the MindSonic flow")
+    parser.add_argument(
+        "--query",
+        help="Research query to override the content of request.txt",
+    )
+    args = parser.parse_args()
+
+    kickoff(query=args.query)

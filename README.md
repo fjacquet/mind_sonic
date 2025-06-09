@@ -48,6 +48,15 @@ To kickstart your flow and begin execution, run this from the root folder of you
 crewai run
 ```
 
+You can also provide a custom query directly:
+
+```bash
+python -m mind_sonic.main --query "Tell me about AI"
+```
+
+If no query is supplied, MindSonic will look for `request.txt` in the
+`src/mind_sonic` directory and use its contents.
+
 To visualize the flow structure:
 
 ```bash
