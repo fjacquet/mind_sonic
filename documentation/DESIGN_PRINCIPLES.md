@@ -78,7 +78,15 @@ Like a haiku poem with its strict form of simplicity and elegance:
    - Prefer explicit imports from specific modules over package-level imports
    - Group related functionality in dedicated directories
 
-6. **Report Generation**
+6. **Python Package Management**
+   - Use `uv` tool for all Python package operations instead of pip or conda
+   - Install packages with `uv pip install <package>`
+   - Create and manage virtual environments with `uv venv`
+   - Run Python scripts with `uv run python <script.py>`
+   - Exception: CrewAI commands should be run directly (e.g., `crewai run` instead of `uv run crewai run`)
+   - Maintain consistent package versions across development environments
+
+7. **Report Generation**
    - Generate reports in HTML format for rich presentation
    - Always include UTF-8 encoding declarations to handle special characters and emojis
    - Use emojis strategically to enhance readability and visual appeal
