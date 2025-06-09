@@ -55,7 +55,7 @@ class YahooFinanceETFHoldingsTool(BaseTool):
             try:
                 holdings = ticker_data.get_holdings()
                 top_holdings = []
-                
+
                 if not holdings.empty:
                     # Format top 10 holdings
                     for _, row in holdings.head(10).iterrows():
@@ -67,12 +67,12 @@ class YahooFinanceETFHoldingsTool(BaseTool):
                         top_holdings.append(holding)
             except:
                 top_holdings = []
-                
+
             # Get sector data
             try:
                 sector_data = ticker_data.get_sector_data()
                 sectors = {}
-                
+
                 if not sector_data.empty:
                     for sector, weight in sector_data.items():
                         sectors[sector] = weight

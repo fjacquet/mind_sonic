@@ -59,3 +59,37 @@ reporting_task:
     - Clean, consistent styling throughout the document
   agent: reporting_analyst
   output_file: output/answer.html
+
+script_task:
+  description: >
+    Create an engaging podcast script based on the research findings about "{query}". Your script should:
+    1. Begin with a catchy introduction that captures audience interest
+    2. Structure information in a logical narrative flow suitable for audio
+    3. Transform complex research points into conversational language
+    4. Include speaker cues, timing marks, and audio direction where appropriate
+    5. Create natural transitions between topics and segments
+    6. Incorporate questions or hooks that maintain listener engagement
+    7. End with a compelling conclusion and call to action
+    
+    Guidelines:
+    - Write in a conversational style that sounds natural when spoken aloud
+    - Balance educational content with storytelling elements
+    - Include technical details without becoming overly complex
+    - Create clear speaker directions (e.g., [PAUSE], [EMPHASIS], [TRANSITION])
+    - Aim for a script length of 10-15 minutes of speaking time
+    - Incorporate occasional questions or reflective moments
+    - Ensure all facts and statistics from the research remain accurate
+  expected_output: >
+    A professional podcast script that includes:
+    - Engaging introduction with hook and episode theme
+    - Clear segment structure with timing marks
+    - Conversational explanations of key research points
+    - Natural transitions between topics
+    - Technical information translated into accessible language
+    - Speaker directions and audio cues
+    - Engaging questions or reflective prompts
+    - Compelling conclusion with key takeaways
+    - Estimated total runtime of 10-15 minutes
+    - Citations or source references integrated naturally
+  agent: script_expert
+  output_file: output/podcast_script.md

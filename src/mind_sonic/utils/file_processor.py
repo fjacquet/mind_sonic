@@ -4,6 +4,7 @@ File Processing Utilities
 
 This module contains utilities for processing files of various types.
 """
+
 from pathlib import Path
 from typing import List
 import logging
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def process_files(file_list: List[str], file_type: str) -> None:
     """Process files of a specific type.
-    
+
     Args:
         file_list: List of files to process
         file_type: Type of files being processed

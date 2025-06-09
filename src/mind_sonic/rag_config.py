@@ -22,7 +22,9 @@ DEFAULT_RAG_CONFIG = {
         "provider": "chroma",
         "config": {
             "collection_name": "mind_sonic",
-            "dir": os.path.join(PROJECT_ROOT, "storage/chroma"),  # Absolute path to storage directory
+            "dir": os.path.join(
+                PROJECT_ROOT, "storage/chroma"
+            ),  # Absolute path to storage directory
             "allow_reset": True,
         },
     },

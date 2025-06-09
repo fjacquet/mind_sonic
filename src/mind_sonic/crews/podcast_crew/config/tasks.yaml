@@ -1,0 +1,93 @@
+podcast_task:
+  description: >
+    Deliver an engaging podcast based on the provided script located at output/podcast_script.md. Your delivery should:
+    1. Present the content with appropriate pacing, tone, and emphasis
+    2. Create a conversational, approachable atmosphere for listeners
+    3. Emphasize key points and insights from the research
+    4. Follow all speaker cues and directions in the script
+    5. Adapt energy and pacing to match content importance and complexity
+    6. Create seamless transitions between segments
+    7. Conclude with a strong, memorable ending
+    
+    Guidelines:
+    - Maintain a warm, engaging tone throughout the delivery
+    - Use vocal techniques to highlight important information
+    - Vary your pace and energy to enhance listener engagement
+    - Pronounce technical terms clearly and confidently
+    - Allow strategic pauses for emphasis and listener comprehension
+    - Balance entertainment value with educational substance
+    - Create an authentic, personal connection with the audience
+    
+  expected_output: >
+    A polished podcast delivery that includes:
+    - Professional, engaging vocal presentation
+    - Natural-sounding delivery of technical information
+    - Appropriate emphasis on key points and insights
+    - Strategic pacing that enhances understanding
+    - Seamless transitions between segments
+    - Authentic, conversational tone throughout
+    - Compelling delivery of conclusion and key takeaways
+    - Overall engaging listening experience
+  agent: podcast_speaker
+  output_file: output/podcast_delivery.mp3
+
+translation_task:
+  description: >
+    Translate the English podcast script (located at output/podcast_script.md) into fluent, natural-sounding French. Your translation should:
+    1. Preserve the original meaning and intent of each segment
+    2. Adapt the language to sound natural in French
+    3. Maintain all speaker cues and audio directions ([PAUSE], [EMPHASIS], etc.)
+    4. Keep the same formatting structure as the original script
+    5. Adapt any cultural references, idioms, or examples to resonate with French speakers
+    6. Ensure technical terminology is correctly translated using standard French terms
+    7. Preserve the engaging, conversational tone of the original
+    
+    Guidelines:
+    - Prioritize natural expression over literal translation
+    - Maintain the same paragraph structure and speaker indications
+    - Adapt sentence structure when necessary for French grammar
+    - Consider French cultural context when translating examples or analogies
+    - Ensure the podcast flow and timing remain consistent with the original
+    - Use appropriate French punctuation and formatting conventions
+  expected_output: >
+    A professionally translated French podcast script that includes:
+    - Natural, fluent French text that maintains the original meaning
+    - Preserved script formatting and structure
+    - All speaker cues and audio directions from the original
+    - Appropriate French terminology for technical concepts
+    - Cultural adaptations where necessary
+    - The same engaging tone and flow as the original English script
+  agent: translator
+  output_file: output/podcast_script_fr.md
+
+french_podcast_task:
+  description: >
+    Deliver an engaging podcast in French based on the translated script located at output/podcast_script_fr.md. Your delivery should:
+    1. Present the content with appropriate French pacing, tone, and emphasis
+    2. Create a conversational, approachable atmosphere for French-speaking listeners
+    3. Emphasize key points and insights from the research in natural French
+    4. Follow all speaker cues and directions in the script
+    5. Adapt energy and pacing to match content importance and complexity
+    6. Create seamless transitions between segments
+    7. Conclude with a strong, memorable ending in French
+    
+    Guidelines:
+    - Maintain a warm, engaging tone throughout the delivery in authentic French
+    - Use vocal techniques to highlight important information
+    - Vary your pace and energy to enhance listener engagement
+    - Pronounce French technical terms clearly and accurately
+    - Allow strategic pauses for emphasis and listener comprehension
+    - Balance entertainment value with educational substance
+    - Create an authentic, personal connection with the French-speaking audience
+  expected_output: >
+    A polished French podcast delivery that includes:
+    - Professional, engaging vocal presentation in French
+    - Natural-sounding delivery of technical information
+    - Appropriate emphasis on key points and insights
+    - Strategic pacing that enhances understanding
+    - Seamless transitions between segments
+    - Authentic, conversational French tone throughout
+    - Compelling delivery of conclusion and key takeaways
+    - Overall engaging listening experience for French speakers
+  agent: podcast_speaker_french
+  output_file: output/podcast_delivery_fr.mp3

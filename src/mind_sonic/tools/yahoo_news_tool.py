@@ -36,13 +36,13 @@ class YahooFinanceNewsTool(BaseTool):
         """Execute the Yahoo Finance news lookup."""
         try:
             ticker_data = yf.Ticker(ticker)
-            
+
             # Get news data
             news_data = ticker_data.news
-            
+
             if not news_data:
                 return {"error": f"No news available for {ticker}"}
-                
+
             # Format news items
             news_items = []
             for item in news_data[:limit]:
@@ -55,7 +55,7 @@ class YahooFinanceNewsTool(BaseTool):
                     "related_tickers": item.get("relatedTickers", []),
                 }
                 news_items.append(news_item)
-                
+
             return {
                 "symbol": ticker,
                 "news_count": len(news_items),

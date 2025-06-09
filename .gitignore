@@ -9,6 +9,7 @@ lib/
 *.pdf
 *.xlsx
 *.pptx
+*.mp3
 storage/chroma/
 logs/*
 !logs/.gitkeep
