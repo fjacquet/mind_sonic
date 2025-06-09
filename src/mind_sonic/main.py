@@ -7,6 +7,7 @@ and generating a poem using CrewAI. The design follows KISS, YAGNI, and DRY prin
 """
 from typing import List
 from pathlib import Path
+import argparse
 
 from crewai.flow import Flow, listen, start, router, and_
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
@@ -102,14 +103,20 @@ class SonicFlow(Flow[SonicState]):
     def start_research(self):
         """Start research after indexing."""
         print("Starting research")
-        
-        request = read_file("src/mind_sonic/request.txt")
-        inputs={
-            "query":request,
-            "current_year":datetime.now().year
-            }
-        
-        ResearchCrew().crew().kickoff(inputs=inputs) 
+        query = getattr(self, "query", None)
+        if query is None:
+            request_file = Path(__file__).with_name("request.txt")
+            if request_file.exists():
+                query = read_file(request_file)
+            else:
+                query = ""
+
+        inputs = {
+            "query": query,
+            "current_year": datetime.now().year,
+        }
+
+        ResearchCrew().crew().kickoff(inputs=inputs)
         
     @listen(start_research)
     def end_research(self):
@@ -119,9 +126,11 @@ class SonicFlow(Flow[SonicState]):
         self.state.poem = poem
         print(poem)
 
-def kickoff() -> None:
+def kickoff(query: str | None = None) -> None:
     """Start the SonicFlow execution."""
     sonic_flow = SonicFlow()
+    if query is not None:
+        sonic_flow.query = query
     sonic_flow.kickoff()
 
 
@@ -132,4 +141,11 @@ def plot() -> None:
 
 
 if __name__ == "__main__":
-    kickoff()
+    parser = argparse.ArgumentParser(description="Run the MindSonic flow")
+    parser.add_argument(
+        "--query",
+        help="Research query to override the content of request.txt",
+    )
+    args = parser.parse_args()
+
+    kickoff(query=args.query)
