@@ -23,8 +23,8 @@ from mind_sonic.utils.file_processor import process_files
 from mind_sonic.utils.logging_utils import setup_logging
 
 # Configure logging
-setup_logging()
-logger = logging.getLogger(__name__)
+logger = setup_logging(component="main")
+logger.info("MindSonic application starting")
 
 
 def read_file(file_path: str) -> str:
@@ -84,6 +84,11 @@ class SonicFlow(Flow[SonicState]):
     def index_pdf(self):
         """Process PDF files."""
         process_files(self.state.document_state.list_pdf, "PDF")
+        
+    @listen(start_indexing)
+    def index_pptx(self):
+        """Process PPTX files."""
+        process_files(self.state.document_state.list_pptx, "PPTX")
 
     @listen(start_indexing)
     def index_xlsx(self):
@@ -99,6 +104,7 @@ class SonicFlow(Flow[SonicState]):
             index_html,
             index_md,
             index_pdf,
+            index_pptx,
             index_xlsx,
         )
     )

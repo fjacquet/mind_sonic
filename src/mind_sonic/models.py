@@ -17,7 +17,8 @@ class DocumentState(BaseModel):
     list_csv: List[str] = Field(default_factory=list)
     list_docx: List[str] = Field(default_factory=list)
     list_html: List[str] = Field(default_factory=list)
-    list_md: List[str] = Field(default_factory=list)
+    list_md: List[str] = Field(default_factory=list)    
+    list_pptx: List[str] = Field(default_factory=list)
     list_pdf: List[str] = Field(default_factory=list)
     list_xlsx: List[str] = Field(default_factory=list)
 
