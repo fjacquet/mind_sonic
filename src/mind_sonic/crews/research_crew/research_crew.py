@@ -11,7 +11,7 @@ from mind_sonic.tools.yahoo_history_tool import YahooFinanceHistoryTool
 from mind_sonic.tools.yahoo_company_info_tool import YahooFinanceCompanyInfoTool
 from mind_sonic.tools.yahoo_etf_holdings_tool import YahooFinanceETFHoldingsTool
 from mind_sonic.tools.yahoo_news_tool import YahooFinanceNewsTool
-from mind_sonic.tools.openai_tts_tool import OpenAITTSTool
+# from mind_sonic.tools.openai_tts_tool import OpenAITTSTool # Removed unused import
 from mind_sonic.utils.logging_utils import get_logger, log_function_call
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -43,8 +43,8 @@ class ResearchCrew:
     etf_holdings_tool = YahooFinanceETFHoldingsTool()
     news_tool = YahooFinanceNewsTool()
 
-    # Text-to-Speech tool
-    tts_tool = OpenAITTSTool()
+    # Text-to-Speech tool (Removed unused tts_tool instance)
+    # tts_tool = OpenAITTSTool()
 
     save_tool = SaveToRagTool(rag_tool)
     # Learn more about YAML configuration files here:

@@ -1,9 +1,1 @@
-research_task:
-  description: >
-    Answer the following question thoroughly using the information from the
-    knowledge base: "What are the key benefits of using AI agents for business
-    automation?"
-  expected_output: >
-    A detailed, well-structured answer based *only* on the provided knowledge
-    base, citing relevant sections if possible.
-  agent: researcher
+{}

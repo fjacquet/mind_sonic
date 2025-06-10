@@ -22,13 +22,16 @@ def process_files(file_list: List[str], file_type: str) -> None:
         file_list: List of files to process
         file_type: Type of files being processed
     """
-    logger.info("Indexing %s", file_type)
+    logger.info("Starting processing for %s files", file_type)
+    
+    indexer = IndexerCrew()  # Instantiate IndexerCrew once outside the loop
+    
     for file in file_list:
-        logger.info(Path(file).name)
+        logger.info("Processing file: %s", Path(file).name)
         try:
-            indexer = IndexerCrew()
-            result = indexer.process_file({"file": file, "suffix": file_type})
-            logger.info(result)
+            input_data = {"file": file, "suffix": file_type}
+            result = indexer.process_file(input_data)
+            logger.info("Result for %s: %s", Path(file).name, result)
             archive_files(file)
         except Exception as e:
-            logger.error("Error indexing %s: %s", file, e)
+            logger.error("Error processing file %s: %s", Path(file).name, e, exc_info=True)

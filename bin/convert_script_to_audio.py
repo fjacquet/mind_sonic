@@ -105,25 +105,29 @@ LANGUAGE_VOICE_MAP = {
     "japanese": "nova",
     "ja": "nova",
     "portuguese": "alloy",
-    "pt": "alloy"
+    "pt": "alloy",
 }
 
 
 def determine_voice_for_language(language):
     """
     Select the appropriate voice based on the language.
-    
+
     Args:
         language: Language code or name (e.g., 'en', 'english', 'fr', 'french')
-        
+
     Returns:
         Voice name to use with OpenAI TTS API
     """
     language = language.lower()
-    return LANGUAGE_VOICE_MAP.get(language, "alloy")  # Default to alloy if language not found
+    return LANGUAGE_VOICE_MAP.get(
+        language, "alloy"
+    )  # Default to alloy if language not found
 
 
-def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-1", language=None):
+def convert_script_to_audio(
+    script_file, output_file, voice="alloy", model="tts-1", language=None
+):
     """
     Convert a podcast script to audio using OpenAI's TTS API.
     Handles long scripts by splitting them into smaller chunks.
@@ -140,7 +144,7 @@ def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-
     try:
         with open(script_file, "r", encoding="utf-8") as f:
             script_content = f.read()
-            
+
         if not script_content.strip():
             print(f"Warning: Script file '{script_file}' is empty!")
             return False
@@ -162,13 +166,15 @@ def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-
         print(f"Error initializing OpenAI client: {e}")
         print("Make sure your OPENAI_API_KEY environment variable is set correctly.")
         return False
-        
+
     # Determine appropriate voice if language is specified
     if language:
         original_voice = voice
         voice = determine_voice_for_language(language)
         if original_voice != voice:
-            print(f"Using voice '{voice}' for language '{language}' (changed from '{original_voice}')")
+            print(
+                f"Using voice '{voice}' for language '{language}' (changed from '{original_voice}')"
+            )
         else:
             print(f"Using voice '{voice}' for language '{language}'")
 
@@ -226,7 +232,7 @@ def convert_script_to_audio(script_file, output_file, voice="alloy", model="tts-
                     pass
 
     print("Conversion complete!")
-    
+
     # Return True to indicate success
     return True
 
@@ -294,17 +300,19 @@ if __name__ == "__main__":
         model=args.model,
         language=args.language,
     )
-    
+
     # Check if conversion was successful
     if result is False:
         print("\nConversion failed! Please check the error messages above.")
         exit(1)
-    
+
     # Verify the output file exists and has content
     output_path = Path(args.output)
     if not output_path.exists():
-        print(f"\nError: Output file '{args.output}' was not created!")  
+        print(f"\nError: Output file '{args.output}' was not created!")
         exit(1)
     elif output_path.stat().st_size < 1000:  # Less than 1KB is suspicious
-        print(f"\nWarning: Output file '{args.output}' is suspiciously small ({output_path.stat().st_size} bytes)")
+        print(
+            f"\nWarning: Output file '{args.output}' is suspiciously small ({output_path.stat().st_size} bytes)"
+        )
         print("The audio file may be empty or corrupted.")

@@ -17,43 +17,46 @@ from crewai.flow import Flow, and_, listen, router, start
 from mind_sonic.crews.indexer_crew.indexer_crew import IndexerCrew
 from mind_sonic.crews.poem_crew.poem_crew import PoemCrew
 from mind_sonic.crews.research_crew.research_crew import ResearchCrew
+from mind_sonic.crews.podcast_crew.podcast_crew import PodcastCrew
 from mind_sonic.models import DocumentState, SonicState
 from mind_sonic.utils.file_finder import find_files
 from mind_sonic.utils.file_processor import process_files
 from mind_sonic.utils.logging_utils import setup_logging
+from mind_sonic.config.settings import settings
 
 # Configure logging
-logger = setup_logging()  # No component specified - logs will go directly to logs directory
+logger = (
+    setup_logging()
+)  # No component specified - logs will go directly to logs directory
 logger.info("MindSonic application starting")
 
 
 def read_file(file_path: str) -> str:
     """Read the content of a file and return it as a string."""
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         return file.read().strip()
-    
+
 
 class SonicFlow(Flow[SonicState]):
     """Main flow for processing files and generating a poem.
-    
+
     Follows a simple pattern:
     1. List all files
     2. Process each file type in parallel
     3. Generate a poem when done
     """
+
     @start()
     def list_files(self):
         """Entry point: find all files to process."""
         logger.info("Listing files")
         document_state = DocumentState()
-        self.state.document_state = find_files("knowledge", document_state)
+        self.state.document_state = find_files(str(settings.KNOWLEDGE_DIR), document_state)
 
     @router(list_files)
     def start_indexing(self):
         """Route to parallel indexing processes."""
         logger.info("Starting indexing")
-
-
 
     @listen(start_indexing)
     def index_text(self):
@@ -84,7 +87,7 @@ class SonicFlow(Flow[SonicState]):
     def index_pdf(self):
         """Process PDF files."""
         process_files(self.state.document_state.list_pdf, "PDF")
-        
+
     @listen(start_indexing)
     def index_pptx(self):
         """Process PPTX files."""
@@ -94,7 +97,7 @@ class SonicFlow(Flow[SonicState]):
     def index_xlsx(self):
         """Process Excel files."""
         process_files(self.state.document_state.list_xlsx, "xlsx")
-    
+
     @listen(
         and_(
             start_indexing,
@@ -112,14 +115,13 @@ class SonicFlow(Flow[SonicState]):
         """Meeting point after all files are processed."""
         logger.info("Indexing done")
 
-
     @listen(end_indexing)
     def start_research(self):
         """Start research after indexing."""
 
         print("Starting research")
         # Ensure the output directory exists before research begins
-        os.makedirs("output", exist_ok=True)
+        settings.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
         query = getattr(self, "query", None)
         if query is None:
@@ -136,25 +138,25 @@ class SonicFlow(Flow[SonicState]):
 
         ResearchCrew().crew().kickoff(inputs=inputs)
 
-        
     @listen(start_research)
     def end_research(self):
         """Meeting point after research."""
         logger.info("Research done")
-        
+
     @listen(end_research)
     def start_podcast(self):
         """Start podcast after research."""
         logger.info("Starting podcast")
         PodcastCrew().crew().kickoff()
-    
+
     @listen(start_podcast)
     def end_podcast(self):
-        """Generate a poem after research."""
-        logger.info("posdcase done, let's finish with a poem")
+        """Kick off poem generation after the podcast."""
+        logger.info("Podcast done, let's finish with a poem")
         poem = PoemCrew().crew().kickoff()
         self.state.poem = poem
         logger.info(poem)
+
 
 def kickoff(query: str | None = None) -> None:
     """Start the SonicFlow execution."""

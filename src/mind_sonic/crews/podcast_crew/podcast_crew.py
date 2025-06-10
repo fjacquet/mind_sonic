@@ -1,4 +1,5 @@
 import logging
+import os
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
@@ -6,7 +7,9 @@ from typing import List, Optional
 
 from mind_sonic.tools.openai_tts_tool import OpenAITTSTool
 from mind_sonic.tools.save_to_rag_tool import SaveToRagTool
+from mind_sonic.tools.file_read_tool import FileReadTool
 from crewai_tools import RagTool
+from mind_sonic.rag_config import DEFAULT_RAG_CONFIG # Added import
 from mind_sonic.utils.logging_utils import log_function_call
 
 # Set up logger
@@ -26,6 +29,7 @@ class PodcastCrew:
     save_tool: Optional[SaveToRagTool] = None
     tts_tool_en: Optional[OpenAITTSTool] = None
     tts_tool_fr: Optional[OpenAITTSTool] = None
+    file_read_tool: Optional[FileReadTool] = None
 
     def __init__(self):
         """Initialize the PodcastCrew and set up tools"""
@@ -38,7 +42,7 @@ class PodcastCrew:
 
         # Initialize RAG tool if not already created
         if self.rag_tool is None:
-            self.rag_tool = RagTool()
+            self.rag_tool = RagTool(config=DEFAULT_RAG_CONFIG)
 
         # Initialize Save to RAG tool if not already created
         if self.save_tool is None:
@@ -51,6 +55,10 @@ class PodcastCrew:
         if self.tts_tool_fr is None:
             self.tts_tool_fr = OpenAITTSTool()
 
+        # Initialize File Read tool if not already created
+        if self.file_read_tool is None:
+            self.file_read_tool = FileReadTool()
+
     @agent
     @log_function_call(logger)
     def podcast_speaker(self) -> Agent:
@@ -62,6 +70,7 @@ class PodcastCrew:
                 self.rag_tool,
                 self.tts_tool_en,  # Use English TTS tool
                 self.save_tool,
+                self.file_read_tool,
             ],
             allow_delegation=False,
             verbose=True,
@@ -97,6 +106,7 @@ class PodcastCrew:
                 self.rag_tool,
                 self.tts_tool_fr,  # Use French TTS tool with recommended French voices
                 self.save_tool,
+                self.file_read_tool,
             ],
             allow_delegation=False,
             verbose=True,
@@ -109,7 +119,7 @@ class PodcastCrew:
     def podcast_task(self) -> Task:
         """Create task for English podcast delivery"""
         return Task(
-            config=self.tasks_config["podcast_task"],  # type: ignore[index]§
+            config=self.tasks_config["podcast_task"],  # type: ignore[index]
         )
 
     @task

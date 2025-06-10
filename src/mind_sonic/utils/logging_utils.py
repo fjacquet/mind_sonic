@@ -11,6 +11,7 @@ import logging.handlers
 import sys
 from datetime import datetime
 from pathlib import Path
+from mind_sonic.config.settings import settings
 from typing import Optional, Any, Type
 
 
@@ -61,9 +62,9 @@ def setup_logging(
     Returns:
         Logger: Configured logger instance
     """
-    # Create logs directory
-    log_dir = Path(__file__).resolve().parents[3] / "logs"
-    log_dir.mkdir(exist_ok=True)
+    # Use logs directory from settings
+    log_dir = settings.LOGS_DIR
+    log_dir.mkdir(parents=True, exist_ok=True)  # Ensure it exists (settings.py also does this)
 
     # Create component subdirectory if specified
     if component:
@@ -124,10 +125,8 @@ def setup_logging(
     console_handler.setFormatter(ColoredFormatter(log_format))
     logger.addHandler(console_handler)
 
-    # File handler with rotation
-    logs_dir = Path("logs")
-    logs_dir.mkdir(exist_ok=True)
-    log_file = logs_dir / f"mind_sonic_{datetime.now().strftime('%Y%m%d')}.log"
+    # File handler with rotation, using settings.LOGS_DIR
+    log_file = settings.LOGS_DIR / f"mind_sonic_{datetime.now().strftime('%Y%m%d')}.log"
     file_handler = logging.handlers.RotatingFileHandler(
         log_file,
         maxBytes=10 * 1024 * 1024,  # 10MB

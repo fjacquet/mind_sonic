@@ -29,7 +29,7 @@ podcast_task:
     - Compelling delivery of conclusion and key takeaways
     - Overall engaging listening experience
   agent: podcast_speaker
-  output_file: output/podcast_delivery.mp3
+  # output_file: output/podcast_delivery.mp3
 
 translation_task:
   description: >
@@ -90,4 +90,4 @@ french_podcast_task:
     - Compelling delivery of conclusion and key takeaways
     - Overall engaging listening experience for French speakers
   agent: podcast_speaker_french
-  output_file: output/podcast_delivery_fr.mp3
+  # output_file: output/podcast_delivery_fr.mp3

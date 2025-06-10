@@ -6,8 +6,11 @@ with support for environment variables via .env file.
 """
 
 from pathlib import Path
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings # Updated for Pydantic v2
+from pydantic import Field # Field remains in pydantic core
 
+# Define BASE_DIR at the module level for accessibility
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 class Settings(BaseSettings):
     """Application settings with environment variable support."""
@@ -17,7 +20,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL")
 
     # Directory settings
-    BASE_DIR: Path = Path(__file__).parent.parent.parent
+    # BASE_DIR is now at module level
     KNOWLEDGE_DIR: Path = Field(default=BASE_DIR / "knowledge", env="KNOWLEDGE_DIR")
     ARCHIVE_DIR: Path = Field(default=BASE_DIR / "archive", env="ARCHIVE_DIR")
     OUTPUT_DIR: Path = Field(default=BASE_DIR / "output", env="OUTPUT_DIR")

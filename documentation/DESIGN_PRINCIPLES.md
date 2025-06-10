@@ -76,6 +76,7 @@ Like a haiku poem with its strict form of simplicity and elegance:
    - Split utility functions into separate modules by functionality
    - Use empty `__init__.py` files for package structure
    - Prefer explicit imports from specific modules over package-level imports
+   - Place all imports at the top of the file, never inline within functions or methods
    - Group related functionality in dedicated directories
 
 6. **Python Package Management**
