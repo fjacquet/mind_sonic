@@ -79,7 +79,12 @@ Like a haiku poem with its strict form of simplicity and elegance:
    - Place all imports at the top of the file, never inline within functions or methods
    - Group related functionality in dedicated directories
 
-6. **Python Package Management**
+6. **Project Directory Layout**
+   - The `src` directory should contain only Python source code (e.g., the main application package `mind_sonic`, tools, etc.).
+   - Data files, logs, outputs, archives, and other runtime artifacts should be stored in directories at the project root (e.g., `knowledge/`, `logs/`, `output/`, `archive/`, `storage/`).
+   - Configuration in `settings.py` should define the paths to these root-level artifact directories. This keeps the source code separate from generated data and improves clarity.
+
+7. **Python Package Management**
    - Use `uv` tool for all Python package operations instead of pip or conda
    - Install packages with `uv pip install <package>`
    - Create and manage virtual environments with `uv venv`
@@ -87,7 +92,7 @@ Like a haiku poem with its strict form of simplicity and elegance:
    - Exception: CrewAI commands should be run directly (e.g., `crewai run` instead of `uv run crewai run`)
    - Maintain consistent package versions across development environments
 
-7. **Report Generation**
+8. **Report Generation**
    - Generate reports in HTML format for rich presentation
    - Always include UTF-8 encoding declarations to handle special characters and emojis
    - Use emojis strategically to enhance readability and visual appeal
