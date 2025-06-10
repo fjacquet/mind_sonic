@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings # Updated for Pydantic v2
 from pydantic import Field # Field remains in pydantic core
 
 # Define BASE_DIR at the module level for accessibility
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 class Settings(BaseSettings):
     """Application settings with environment variable support."""
@@ -28,6 +28,9 @@ class Settings(BaseSettings):
 
     # File processing
     MAX_FILE_SIZE_MB: int = Field(default=50, env="MAX_FILE_SIZE_MB")
+
+    # API Keys
+    ELEVENLABS_API_KEY: str = Field(default="", env="ELEVENLABS_API_KEY")
 
     class Config:
         """Pydantic config."""
